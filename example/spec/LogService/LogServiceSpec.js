@@ -61,21 +61,21 @@ behave.spec('refs')
 })
 
 // properties are available via this
-// inject wire components in when methods using @autowire
+// inject wire components in in methods using @autowire
 // all methods support returning promises for async support
 // assertions are provided by sinon and chai adapters
 // then.expect takes either function(description) or a value
 .describe('.log', function() {
-	when('should notify log listeners', function(/* @autowire */someComponent) {
+	it('should notify log listeners', function(/* @autowire */someComponent) {
 		this.logService(INFO, 'i am a sweet logger');
-	}).then.expect(this.logListener).to.eventually.be.calledWith({
+	}).expect(this.logListener).to.eventually.be.calledWith({
 		level : 1,
 		message : 'i am a sweet logger'
 	});
 
-	when('called with an invalid log level', function() {
+	it('should fail when called with an invalid log level', function() {
 		this.logService(undefined, 'i am a naughty logger');
-	}).then.expect(function(descriptor) {
+	}).expect(function(descriptor) {
 		return descriptor.state;
 	}).to.equal('rejected');
 })
