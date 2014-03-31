@@ -60,13 +60,14 @@ behave.spec('refs')
 	}
 })
 
-// properties are available via this
-// inject wire components in in methods using @autowire
-// all methods support returning promises for async support
-// assertions are provided by sinon and chai adapters
-// then.expect takes either function(description) or a value
+// - properties are available via this
+// - inject wire components in in methods using @autowire
+// - all methods support returning promises for async support
+// - assertions are provided by sinon and chai adapters
+// - so.expect takes either a when.settle handler (function(descriptor ){}) or a
+// value(someValue) or empty()
 .describe('.log', function() {
-	it('should notify log listeners', function(/* @autowire */someComponent) {
+	it('should notify log listeners', function() {
 		this.logService(INFO, 'i am a sweet logger');
 	}).so.expect(this.logListener).to.eventually.be.calledWith({
 		level : 1,
@@ -78,6 +79,19 @@ behave.spec('refs')
 	}).so.expect(function(descriptor) {
 		return descriptor.state;
 	}).to.equal('rejected');
+
+	it('should fail when called with no message', function() {
+		this.logService(undefined, 'i am a naughty logger');
+	}).so.expect().to.reject();
+})
+
+// - nesting support
+.describe('.someFunction', function() {
+	describe('given some context', function() {
+		it('should do something', function(/* @autowire */foo) {
+			return foo();
+		}).so.expect().to.equal('bar');
+	});
 })
 
 .endSpec();
