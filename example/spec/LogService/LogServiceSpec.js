@@ -5,10 +5,10 @@ behave.spec('refs')
 // load factories, services, mock objects, ...
 .wire('LogService')
 
-// objects under test
-.props({
+// observable data
+.observe({
 	logService : null,
-	logListener : null
+	logListener : observe()
 })
 
 // setup -> weave
@@ -27,8 +27,8 @@ behave.spec('refs')
 		setup : function(/* @autowire */logFactory) {
 			console.info('setup called before each tests');
 			this.logService = logFactory.newInstance();
-			this.logListener = function(logEntry) {
-			};
+			this.logListener.set(function(logEntry) {
+			});
 		},
 		weave : function() {
 			console.info('weave called before each tests');
