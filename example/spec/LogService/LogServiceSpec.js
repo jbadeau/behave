@@ -64,9 +64,20 @@ behave.spec('refs')
 // - inject wire components in in methods using @autowire
 // - all methods support returning promises for async support
 // - assertions are provided by sinon and chai adapters
-// - so.expect takes either a when.settle handler (function(descriptor ){}) or a
-// value(someValue) or empty()
+// - so.expect takes either a settle resolver (function(descriptor ){}) or a non function ref or empty()
 .describe('.log', function() {
+
+	// resolve
+	it('should notify log listeners', function() {
+		this.logService(INFO, 'i am a sweet logger');
+	}).so.expect().to.eventually.resolve();
+	
+	// reject
+	it('should fail when called with no message', function() {
+		this.logService(undefined, 'i am a naughty logger');
+	}).so.expect().to.reject();
+	
+	// expect some non function ref
 	it('should notify log listeners', function() {
 		this.logService(INFO, 'i am a sweet logger');
 	}).so.expect(this.logListener).to.eventually.be.calledWith({
@@ -74,15 +85,14 @@ behave.spec('refs')
 		message : 'i am a sweet logger'
 	});
 
+	// expect settle resolver
 	it('should fail when called with an invalid log level', function() {
 		this.logService(undefined, 'i am a naughty logger');
 	}).so.expect(function(descriptor) {
 		return descriptor.state;
 	}).to.equal('rejected');
+	
 
-	it('should fail when called with no message', function() {
-		this.logService(undefined, 'i am a naughty logger');
-	}).so.expect().to.reject();
 })
 
 // - nesting support
