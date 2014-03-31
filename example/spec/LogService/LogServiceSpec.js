@@ -5,10 +5,10 @@ behave.spec('refs')
 // load factories, services, mock objects, ...
 .wire('LogService')
 
-// observable data
+// observable data which can be weaved and used in expect assertions
 .observe({
 	logService : null,
-	logListener : observe()
+	logListener : observe(null)
 })
 
 // setup -> weave
