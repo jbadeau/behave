@@ -1,4 +1,4 @@
-behave.spec('refs')
+behave.spec('LogService')
 
 // wire 1-n context files like
 // ('context') or ({}) or ['context', {}, ...]
@@ -6,13 +6,13 @@ behave.spec('refs')
 .wire('LogService')
 
 // observable data which can be weaved and used in expect assertions
-.observe({
+.data({
 	logService : null,
-	logListener : observe(null)
+	logListener : observer(null)
 })
 
 // setup -> weave
-// inject wire components using @autowire
+// inject wire components using @Autowire
 // all methods support returning promises for async support
 .before({
 	all : {
@@ -24,9 +24,9 @@ behave.spec('refs')
 		}
 	},
 	each : {
-		setup : function(/* @autowire */logFactory) {
+		setup : function(/* @Autowire */logFactory) {
 			console.info('setup called before each tests');
-			this.logService = logFactory.newInstance();
+			this.logService.set(logFactory.newInstance());
 			this.logListener.set(function(logEntry) {
 			});
 		},
@@ -40,42 +40,36 @@ behave.spec('refs')
 
 // properties are available via this
 // setup -> weave
-// inject wire components using @autowire
+// inject wire components using @Autowire
 // all methods support returning promises for async support
 .after({
 	all : {
-		setup : function() {
+		teardown : function() {
 			console.info('setup called once after all tests');
-		},
-		weave : function() {
-			console.info('weave called once after all tests');
 		}
 	},
 	each : {
 		teardown : function() {
-		},
-		weave : function() {
-			console.info('weave called after each tests');
 		}
 	}
 })
 
 // - properties are available via this
-// - inject wire components in in methods using @autowire
+// - inject wire components in in methods using @Autowire
 // - all methods support returning promises for async support
 // - assertions are provided by sinon and chai adapters
 // - so.expect takes either a settle resolver (function(descriptor ){}) or a non function ref or empty()
 .describe('.log', function() {
 
 	// resolve
-	it('should notify log listeners', function() {
+	it('should not fail', function() {
 		this.logService(INFO, 'i am a sweet logger');
 	}).so.expect().to.eventually.resolve();
 	
 	// reject
-	it('should fail when called with no message', function() {
+	it('should fail when called with an invalid log level', function() {
 		this.logService(undefined, 'i am a naughty logger');
-	}).so.expect().to.reject();
+	}).so.expect().to.eventually.reject();
 	
 	// expect some non function ref
 	it('should notify log listeners', function() {
@@ -90,7 +84,7 @@ behave.spec('refs')
 		this.logService(undefined, 'i am a naughty logger');
 	}).so.expect(function(descriptor) {
 		return descriptor.state;
-	}).to.equal('rejected');
+	}).to.eventually.equal('rejected');
 	
 
 })
@@ -98,7 +92,7 @@ behave.spec('refs')
 // - nesting support
 .describe('.someFunction', function() {
 	describe('given some context', function() {
-		it('should do something', function(/* @autowire */foo) {
+		it('should do something', function(/* @Autowire */foo) {
 			return foo();
 		}).so.expect().to.equal('bar');
 	});
