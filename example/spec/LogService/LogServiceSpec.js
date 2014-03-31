@@ -68,14 +68,14 @@ behave.spec('refs')
 .describe('.log', function() {
 	it('should notify log listeners', function(/* @autowire */someComponent) {
 		this.logService(INFO, 'i am a sweet logger');
-	}).expect(this.logListener).to.eventually.be.calledWith({
+	}).so.expect(this.logListener).to.eventually.be.calledWith({
 		level : 1,
 		message : 'i am a sweet logger'
 	});
 
 	it('should fail when called with an invalid log level', function() {
 		this.logService(undefined, 'i am a naughty logger');
-	}).expect(function(descriptor) {
+	}).so.expect(function(descriptor) {
 		return descriptor.state;
 	}).to.equal('rejected');
 })
