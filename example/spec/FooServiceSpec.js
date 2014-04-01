@@ -111,31 +111,33 @@ behave.spec('FooService')
     // basic resolve expectation. An exception or rejected promise fails test.
     it('should succeed when called with a valid message', function () {
         return this.fooService.foo('bar'); // returns a resolved promise
-    }).so.expect()
-    .to.eventually.resolve();
+    })
+    .so.expect()
+    .to.resolve();
 
     // basic reject expectation. Anything but an exception or rejected promise
     // fails the test
     it('should fail when called without a message', function () {
         return this.fooService.foo(); // returns a rejected promise
-    }).so.expect()
-    .to.eventually.reject();
+    })
+    .so.expect()
+    .to.reject();
 
     // expect that fooListener (observed sinon spy) is called
     it('should notify foo listeners', function () {
         this.fooService.foo('foo');
     })
     .so.expect(this.fooListener)
-    .to.eventually.be.calledWith('foo');
+    .to.be.calledWith('foo');
 
     // chaining promises in it and using sinon to check each call
     it('should notify foo listeners', function () {
-        this.fooService.foo('foo')
-        .then(this.fooService.foo.bind('bar', 'goku'));
+        this.fooService.foo('foo', 'bar')
+        .then(this.fooService.foo.bind(123456));
     })
     .so.expect(this.fooListener)
-    .to.eventually.be.calledWith('foo')
-    .then('bar', 'goku');
+    .to.be.calledWith('foo', 'bar')
+    .then.to.be.calledWith(12345);
 
 
     // evaulate the description (when.settle)
@@ -145,8 +147,8 @@ behave.spec('FooService')
     .so.expect(function (descriptor) {
         return descriptor.reason;
     })
-    .to.eventually.equal('invalid message: null');
-
+    .to.equal('invalid message: null');
+   
 })
 
 /**
