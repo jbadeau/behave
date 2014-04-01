@@ -32,14 +32,14 @@ behave.spec('LogService')
  * <p>
  * Observables are implicity available.
  * <p>
- * Use Autowire the to inject wire components.
+ * Use autowire the to inject wire components.
  */
 .before({
 	all : function() {
 		console.info('setup called once before all tests');
 	},
 	// inject logFactory from wire context
-	each : function(/* @Autowire */logFactory) {
+	each : function(/* @autowire */logFactory) {
 		console.info('setup called before each tests');
 		this.logService.set(logFactory.newInstance());
 		// sinon spy
@@ -52,7 +52,7 @@ behave.spec('LogService')
  * <p>
  * Observables are implicity available.
  * <p>
- * Use Autowire the to inject wire components.
+ * Use autowire the to inject wire components.
  */
 .after({
 	all : {
@@ -71,7 +71,7 @@ behave.spec('LogService')
  * <p>
  * Observables are implicity available
  * <p>
- * Use Autowire the to inject wire components.
+ * Use autowire the to inject wire components.
  * <p>
  * it methods support returning promises
  * <p>
