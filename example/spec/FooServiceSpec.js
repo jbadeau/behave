@@ -112,16 +112,14 @@ behave.spec('FooService')
     it('should succeed when called with a valid message', function () {
         return this.fooService.foo('bar'); // returns a resolved promise
     })
-    .so.expect()
-    .to.resolve();
+    .so.expect.to.resolve();
 
     // basic reject expectation. Anything but an exception or rejected promise
     // fails the test
-    it('should fail when called without a message', function () {
+    it('should fail when called with an invalid message', function () {
         return this.fooService.foo(); // returns a rejected promise
     })
-    .so.expect()
-    .to.reject();
+    .so.expect.to.reject();
 
     // expect that fooListener (observed sinon spy) is called
     it('should notify foo listeners', function () {
@@ -141,7 +139,7 @@ behave.spec('FooService')
 
 
     // evaulate the description (when.settle)
-    it('should fail when called without an invalid message', function () {
+    it('should fail when called with an invalid message', function () {
         return this.fooService.foo(null); // returns a rejected promise
     })
     .so.expect(function (descriptor) {
